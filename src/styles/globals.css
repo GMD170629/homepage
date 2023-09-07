@@ -58,3 +58,82 @@ body {
 ::-webkit-details-marker {
   display: none;
 }
+
+.main {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  height: 100vh;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 30px 10px;
+  position: relative;
+  padding-bottom: 5%;
+}
+
+.form-horizontal {
+  display: block;
+  margin-top: 0em;
+}
+
+.userlist,.userlist .user {
+  align-items: center;
+  display: flex;
+  justify-content: center
+}
+
+.userlist .user {
+  background: rgba(0,0,0,.5);
+  border: 5px solid hsla(0,0%,100%,.7);
+  border-radius: 15px;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.4);
+  color: #fff;
+  flex-direction: column;
+  margin: 20px;
+  padding: 15px;
+  text-decoration: none
+}
+
+.userlist .user-img {
+  border-radius: 50%;
+  height: 130px;
+  margin: 10px 10px 15px;
+  width: 130px
+}
+
+.userlist #password {
+  color: #2f313a;
+  margin: 15px -5px;
+  padding: 5px 10px;
+  width: 100%
+}
+
+.userlist .btn {
+  width: 100%
+}
+
+.userlist .forgot {
+  color: #fff;
+  font-size: 12px;
+  margin-top: 25px
+}
+
+.btn {
+  background-color: #94A3B8;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn:hover {
+  background-color: #7f8c9d;
+}
+
+.btn:active {
+  transform: translateY(2px);
+}

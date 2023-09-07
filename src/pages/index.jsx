@@ -1,4 +1,6 @@
 /* eslint-disable react/no-array-index-key */
+import { createHash } from "crypto";
+
 import useSWR, { SWRConfig } from "swr";
 import Head from "next/head";
 import dynamic from "next/dynamic";
@@ -367,6 +369,7 @@ function Home({ initialSettings }) {
   );
 }
 
+
 export default function Wrapper({ initialSettings, fallback }) {
   const wrappedStyle = {};
   let backgroundBlur = false;
@@ -393,6 +396,41 @@ export default function Wrapper({ initialSettings, fallback }) {
     wrappedStyle.backgroundSize = "cover";
   }
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const checkIsLoggedIn = () => {
+    // 检查本地存储中是否存在登录状态和信息
+    const isLogged = window.localStorage.getItem("isLoggedIn");
+    const userInfo = window.localStorage.getItem("username");
+    // 如果存在登录状态和信息，则返回true
+    if (isLogged && userInfo) {
+      return true;
+    }
+    return false
+  };
+
+  useEffect(() => {
+    setIsLoggedIn(checkIsLoggedIn());
+  }, [setIsLoggedIn]);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const password = e.target.password.value;
+
+    const hashSum = createHash("sha256");
+    hashSum.update(password);
+    const rPassword = hashSum.digest("hex").toLowerCase().trim();
+    const intPassword = initialSettings.user.password.toLowerCase().trim();
+    // 检查密码是否正确
+    if (rPassword === intPassword) {
+      window.localStorage.setItem("isLoggedIn", true);
+      window.localStorage.setItem("username", "myusername");
+      setIsLoggedIn(true);
+    } else {
+      alert("密码错误");
+    }
+  };
+ 
   return (
     <div
       id="page_wrapper"
@@ -408,15 +446,32 @@ export default function Wrapper({ initialSettings, fallback }) {
         style={wrappedStyle}
       >
         <div
-        id="inner_wrapper"
-        tabIndex="-1"
-        className={classNames(
-          'fixed overflow-auto w-full h-full',
-          backgroundBlur && `backdrop-blur${initialSettings.background.blur.length ? '-' : ""}${initialSettings.background.blur}`,
-          backgroundSaturate && `backdrop-saturate-${initialSettings.background.saturate}`,
-          backgroundBrightness && `backdrop-brightness-${initialSettings.background.brightness}`,
-        )}>
-          <Index initialSettings={initialSettings} fallback={fallback} />
+          id="inner_wrapper"
+          tabIndex="-1"
+          className={classNames(
+            "fixed overflow-auto w-full h-full",
+            backgroundBlur &&
+              `backdrop-blur${initialSettings.background.blur.length ? "-" : ""}${initialSettings.background.blur}`,
+            backgroundSaturate && `backdrop-saturate-${initialSettings.background.saturate}`,
+            backgroundBrightness && `backdrop-brightness-${initialSettings.background.brightness}`
+          )}
+        >
+          {(!initialSettings.auth || isLoggedIn) ? (
+            <Index initialSettings={initialSettings} fallback={fallback} />
+          ) : (
+            <div className="main">
+              <form onSubmit={handleLogin} className="form-horizontal">
+                <div className="userlist">
+                    <div className="user">
+                        <img className="user-img" src={initialSettings.user.avatar} />
+                          {initialSettings.user.username}
+                        <input id="password" type="password" className="form-control" name="password" />
+                        <button type="submit" className='btn btn-slate'>Login</button>
+                    </div>
+                </div>
+              </form>
+            </div>
+          )}
         </div>
       </div>
     </div>
